@@ -21,14 +21,13 @@
                     <a class="nav__item nav__home btn" href="index.html">Home</a>
                     <div class="search">
                         <select name="search__select" id="search__select">
-                            <option value="All">All</option>
                             <option value="Movies">Movies</option>
                             <option value="Actors">Actors</option>
                         </select>
                         <input class="search__input" type="text">
                         <button class="search__btn btn">></button>
                     </div>
-                    <p class="nav__item">Cameron McElwaney</p>
+                    <p id="web-author-name" class="nav__item">Cameron McElwaney</p>
                 </nav>
             </div>
         </header>
@@ -65,11 +64,11 @@
         </section>
         <footer>
             <div class="container">
-                <div class="bookshelf">
+                <div class="pop-movies">
                     <div class="tag-container">
-                        <p class="tag">BOOKSHELF</p>
+                        <p class="tag">POPULAR MOVIES</p>
                     </div>
-                    <div class="bookshelf__cards-container">
+                    <div class="pop-movie__cards-container">
                         <!-- Generated via mustache template -->
                     </div>
                 </div>
@@ -189,6 +188,7 @@
         .detail__img-container {
             width: 30%;
             padding: 10em auto;
+            margin-left: 1rem;
         }
 
         .detail__img {
@@ -204,11 +204,11 @@
             padding: 1em 2em;
         }
 
-        .bookshelf {
+        .pop-movies {
             margin-bottom: 1rem;
         }
 
-        .bookshelf__card {
+        .pop-movie__card {
             background-color: #BB9275 ;
             flex-basis: 15%;
             flex-shrink: 0;
@@ -216,19 +216,31 @@
             transition: 0.3s;
         }
 
-        .bookshelf__card:hover {
+        .pop-movie__card:hover {
             background-color: #718472;
             color: #fff;
             cursor: pointer;
         }
 
         @media screen and (max-width: 970px) {
-            .bookshelf__card {
+            .pop-movie__card {
                 flex-basis: 40%;
+            }
+
+            .detail__card {
+                flex-direction: column;
+            }
+
+            .detail__img-container {
+                width: 60%;
+            }
+
+            #web-author-name {
+                display: none;
             }
         }
 
-        .bookshelf__cards-container {
+        .pop-movie__cards-container {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -305,6 +317,10 @@
             transition: 500ms;
         }
 
+        .result__name {
+            text-transform: uppercase;
+        }
+
         @media screen and (max-width: 970px) {
             .results__card {
                 width: 30%
@@ -320,6 +336,10 @@
         .img-container {
             width: 80%;
             margin: 1em auto;
+        }
+
+        .list-img-container {
+            width: 20%;
         }
 
 
@@ -338,12 +358,17 @@
         }
 
         @media screen and (max-width: 625px) {
+
             .nav {
                 flex-direction: column;
             }
 
             .results__card {
                 width: 45%
+            }
+
+            .list-img-container {
+                width: 60%;
             }
 
             
@@ -404,41 +429,37 @@
     <!-- Mustache.js Template - Search Results card -->
     <script id="result-card-template" type="text/html">
         <article id="{{{id}}}" class="results__card card">
-            <div class="img-container">
-                <img class="results__img" src="{{{volumeInfo.imageLinks.thumbnail}}}" alt="{{{volumeInfo.title}}} book cover">
+            <div class="img-container results__img-container">
+                <img class="results__img" src="{{{img}}}" alt="{{{img}}}">
             </div>
             <div class="results__text">
-                <p>{{volumeInfo.title}}</p>
-                <p>{{volumeInfo.categories[0]}}</p>
+                <p class="result__name">{{title}}</p>
             </div>
          </article>
     </script>
 
-    <!-- Mustache.js Template - Bookshelf card -->
-    <script id="bookshelf-card-template" type="text/html">
-        <article id="{{{id}}}" class="bookshelf__card card">
+    <!-- Mustache.js Template - Popular Movie card -->
+    <script id="popMovie-card-template" type="text/html">
+        <article id="{{{id}}}" class="pop-movie__card card">
             <div class="img-container">
-                <img class="bookshelf__img" src="{{{volumeInfo.imageLinks.thumbnail}}}" alt="">
+                <img class="popMovie__img" src="{{{img}}}" alt="{{{title}}} movie img">
             </div>
             <div class="results__text">
-                <p>{{volumeInfo.title}}</p>
-                <p>{{volumeInfo.categories[0]}}</p>
+                <p>{{title}}</p>
             </div>
         </article>
     </script>
 
     <!-- Mustache.js Template - Detailed card -->
-    <script id="detail-book-template" type="text/html">
+    <script id="detail-movie-template" type="text/html">
         <article class="detail__card">
             <div class="detail__img-container">
-                <img class="detail__img" src="{{{volumeInfo.imageLinks.thumbnail}}}" alt=""/>
+                <img class="detail__img" src="{{{img}}}" alt="{{{title}}} poster photo"/>
             </div>
             <div class="detail__text">
-                <p>{{volumeInfo.title}}</p>
-                <p>{{volumeInfo.subtitle}}</p>
-                <p><b>Genres:</b> {{volumeInfo.categories}}</p>
-                <p class="detail-book__price"><b>Price: </b>${{saleInfo.retailPrice.amount}}</p>
-                <p><b>Description:</b> {{volumeInfo.description}}</p>
+                <p>{{title}}</p>
+                <p><b>Genre:</b> {{genre1}}</p>
+                <p><b>Description:</b> {{overview}}</p>
             </div>
         </article>
     </script>
@@ -457,60 +478,90 @@
                 $('.detail__card').remove();
                 $('.detail').show();
                 $("html, body").scrollTop($('.detail').offset().top); // Send user to their selected book details page.
-                $.ajax({
-                    url: "https://www.googleapis.com/books/v1/volumes/" + this.id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        // Replace all returned html markup (e.g. <p> with "" for display to user)
-                        data.volumeInfo.description = data.volumeInfo.description.replace(/(<([^>]+)>)/ig, "");
-                        data.volumeInfo.description = data.volumeInfo.description.replace(/&lt;br&gt;/gm, " ");
-                        data.volumeInfo.description = data.volumeInfo.description.replace(/●/gm, " ");
-
-                        $('.detail__container').append(Mustache.render($("#detail-book-template").html(), data));
-
-                        if (data.saleInfo.saleability === "NOT_FOR_SALE"){
-                            $(".detail-book__price").html("<b>Price: </b> No price available");
+                if ($('#search__select').val() === 'Movies') {
+                    $.ajax({
+                        url: 'https://api.themoviedb.org/3/movie/' + this.id + '?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US',
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            data.genre1 = data.genres[0].name;
+                            data.img = "https://image.tmdb.org/t/p/w500" + data.poster_path;
+                            $('.detail__container').append(Mustache.render($("#detail-movie-template").html(), data));
+                        },
+                        fail: function () {
+                            console.log("Call to API failed.");
                         }
-                    },
-                    fail: function () {
-                        console.log("Call to API failed.");
-                    }
-                })
+                    })
+                }
+                else if ($('#search__select').val() === 'Actors') {
+                    $.ajax({
+                        url: 'https://api.themoviedb.org/3/person/' + this.id + '?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US',
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        fail: function () {
+                            console.log("Call to API failed.");
+                        }
+                    })
+                }
             });
 
             // Display type button click events
             $('.display-list-btn').click(function () {
                 $('.results__card').css('width', '100%');
+                $('.results__img-container').addClass('list-img-container');
             });
 
             $('.display-grid-btn').click(function() {
                 $('.results__card').css('width', '18%');
+                $('.results__img-container').removeClass('list-img-container');
+                // reset image size
             })
 
             // Show more button click event
             $('.more__btn').click(function() {
                 tempDisable(this);
                 console.log(searchIndex);
-                searchIndex += 10;
                 var searchInput = $('.search__input').val();
-                var searchURL = 'https://www.googleapis.com/books/v1/volumes?q=' + searchInput + '&startIndex=' + searchIndex + '&maxResults=10';
+                if ($('#search__select').val() === 'Movies'){
+                    searchIndex++;
+                var searchURL = 'https://api.themoviedb.org/3/search/movie?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US&page=' + searchIndex + '&query=' + searchInput;
                 $.ajax({
                     url: searchURL,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
-                        renderSearchResults(data.items);
+                        renderMovieSearchResults(data.results);
                     },
                     fail: function (data) {
                         console.log("Request to API failed.");
                     }
                 })
-                if (searchIndex === 40) {
+                if (searchIndex === 3) {
                     $('.more').hide();
                 }
-            });
+            }
+            else {
+                searchIndex++;
+                var searchURL = 'https://api.themoviedb.org/3/search/person?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US&page=' + searchIndex + '&include_adult=false&query=' + searchInput;
+                $.ajax({
+                    url: searchURL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        renderPersonSearchResults(data.results);
+                    },
+                    fail: function (data) {
+                        console.log("Request to API failed.");
+                    }
+                });
+            }
+        });
 
 
             // Search button click event
@@ -519,48 +570,93 @@
                 $('.detail').hide();
                 clearBookList();
                 $('.more').show();
-                searchIndex = 0; // ADJUST FOR PAGINATION
                 var searchInput = $('.search__input').val();
                 if (!searchInput) {
                      searchInput = 'Test';
                      $('.search__input').val('Test'); 
                     }
-                var searchURL = 'https://www.googleapis.com/books/v1/volumes?q=' + searchInput + '&startIndex=0&maxResults=10';
+                if ($('#search__select').val() === 'Movies'){
+                    searchIndex = 1; // ADJUST FOR PAGINATION
+                var searchURL = 'https://api.themoviedb.org/3/search/movie?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US&page=1&query=' + searchInput;
                 $.ajax({
                     url: searchURL,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
-                        renderSearchResults(data.items);
+                        renderMovieSearchResults(data.results);
                     },
                     fail: function (data) {
                         console.log("Request to API failed.");
                     }
                 })
+            }
+            else if ($('#search__select').val() === 'Actors'){
+                    searchIndex = 1; // ADJUST FOR PAGINATION
+                var searchURL = 'https://api.themoviedb.org/3/search/person?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US&page=1&include_adult=false&query=' + searchInput;
+                $.ajax({
+                    url: searchURL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        renderPersonSearchResults(data.results);
+                    },
+                    fail: function (data) {
+                        console.log("Request to API failed.");
+                    }
+                })
+            }
             });
 
-            function renderSearchResults (bookArray) {
-                $.each(bookArray, function (index, book) {
-                    $('.results').append(Mustache.render($('#result-card-template').html(), book));
+            function renderPersonSearchResults (personArray) {
+                $.each(personArray, function (index, person) {
+                    if (person.profile_path === null) {
+                        person.img = '/no-poster-img.png';
+                    }
+                    else {
+                        person.img = 'https://image.tmdb.org/t/p/w500' + person.profile_path;
+                    }
+
+                    person.title = person.name;
+
+                    $('.results').append(Mustache.render($('#result-card-template').html(), person));
+                })
+            }
+
+            function renderMovieSearchResults (movieArray) {
+                $.each(movieArray, function (index, movie) {
+                    if (movie.poster_path === null) {
+                        movie.img = '/no-poster-img.png';
+                    }
+                    else {
+                        movie.img = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+                    }
+                        $('.results').append(Mustache.render($('#result-card-template').html(), movie));
                 });
             }
 
-            // Append bookshelf array mustache template
-            var bookshelf_url = 'https://www.googleapis.com/books/v1/users/109604392818559016458/bookshelves/1001/volumes';
+            // Append popular movie array mustache template
+            var popularMovies_url = 'https://api.themoviedb.org/3/movie/popular?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US&page=1';
             $.ajax({
-               url: bookshelf_url,
+               url: popularMovies_url,
                type: "GET",
                dataType: "json",
                success: function (data) {
                 console.log(data);
-                renderBookshelfArray(data.items);
+                renderPopMoviesArray(data.results);
                } 
             });
 
-            function renderBookshelfArray(bookshelfArray) {
-                $.each(bookshelfArray, function(index, bookshelfItem) {
-                    $('.bookshelf__cards-container').append(Mustache.render($('#bookshelf-card-template').html(), bookshelfItem));
+            function renderPopMoviesArray(popMovieArray) {
+                $.each(popMovieArray, function(index, popMovieItem) {
+                    if (popMovieItem.poster_path === null) {
+                        popMovieItem.img = '/no-poster-img.png';
+                    }
+                    else {
+                        popMovieItem.img = 'https://image.tmdb.org/t/p/w500' + popMovieItem.poster_path;
+                    }
+                    $('.pop-movie__cards-container').append(Mustache.render($('#popMovie-card-template').html(), popMovieItem));
                 });
             }
 
@@ -575,6 +671,6 @@
                 $(element).attr('disabled', 'disabled');
                 setTimeout(function () {$(element).removeAttr('disabled');}, 1300);
             }
-        })
+        });
     </script>
 </html>
