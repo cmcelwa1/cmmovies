@@ -662,7 +662,7 @@
             function renderPersonSearchResults (personArray) {
                 $.each(personArray, function (index, person) {
                     if (person.profile_path === null) {
-                        person.img = '/no-poster-img.png';
+                        person.img = 'no-poster-img.png';
                     }
                     else {
                         person.img = 'https://image.tmdb.org/t/p/w500' + person.profile_path;
