@@ -677,7 +677,7 @@
             function renderMovieSearchResults (movieArray) {
                 $.each(movieArray, function (index, movie) {
                     if (movie.poster_path === null) {
-                        movie.img = '/no-poster-img.png';
+                        movie.img = 'no-poster-img.png';
                     }
                     else {
                         movie.img = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
