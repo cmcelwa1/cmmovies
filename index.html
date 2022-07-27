@@ -18,9 +18,9 @@
         <header>
             <div class="container">
                 <nav class="nav">
-                    <a class="nav__item nav__home btn" href="index.html">Home</a>
+                    <a href="index.html"><img style="width: 6rem;" src="./logo.img.png" alt=""></a>
                     <div class="search">
-                        <select name="search__select" id="search__select">
+                        <select name="search__select" id="search__select" class="search__select">
                             <option value="Movies">Movies</option>
                             <option value="Actors">Actors</option>
                         </select>
@@ -34,13 +34,8 @@
         <main>
             <div class="container results-container">
                 <div class="result-options">
-                    <div class="sort options-container">
-                        <p class="sort__tag option__tag">Sort:</p>
-                        <button class="sort__btn sort__alpha btn">A-Z</button>
-                        <button class="sort__btn sort__price btn">$$>$</button>
-                    </div>
                     <div class="display options-container">
-                        <p class="display__tag option__tag">Display: </p>
+                        <p class="option__tag tag">Display: </p>
                         <button class="display-btn display-grid-btn btn">GRID</button>
                         <button class="display-btn display-list-btn btn">LIST</button>
                     </div>
@@ -78,7 +73,6 @@
                 <div class="credit__img-container">
                     <img src="tmdb_credit.svg" alt="">
                 </div>
-                <i class="fa-solid fa-circle-xmark"></i>
             </div>
             
         </footer>
@@ -121,7 +115,7 @@
             transition: 500ms;
             background-color: #BB9275;
             color: #3f3c3b;
-            font-size: large;
+            font-size: 1rem;
             font-weight: 900;
         }
 
@@ -155,7 +149,7 @@
 
         .tag {
             font-weight: 900;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
         }
 
         .tag-container {
@@ -200,7 +194,7 @@
             width: 70%;
             text-align: center;
             font-weight: 900;
-            font-size: 1.05rem;
+            font-size: 1rem;
             padding: 1em 2em;
         }
 
@@ -220,24 +214,6 @@
             background-color: #718472;
             color: #fff;
             cursor: pointer;
-        }
-
-        @media screen and (max-width: 970px) {
-            .pop-movie__card {
-                flex-basis: 40%;
-            }
-
-            .detail__card {
-                flex-direction: column;
-            }
-
-            .detail__img-container {
-                width: 60%;
-            }
-
-            #web-author-name {
-                display: none;
-            }
         }
 
         .pop-movie__cards-container {
@@ -280,7 +256,6 @@
         }
 
         .option__tag {
-            font-size: 1.1rem;
             margin-right: 1em;
         }
 
@@ -288,7 +263,6 @@
             margin: 0;
             color: black!important;
             font-weight: 900;
-            font-size: 0.9rem!important;
             padding: 0.25em 2em;
         }
 
@@ -296,7 +270,6 @@
             margin: 0;
             color: black!important;
             font-weight: 900;
-            font-size: 0.9rem!important;
             padding: 0.25em 2em;
         }
 
@@ -319,13 +292,6 @@
 
         .result__name {
             text-transform: uppercase;
-        }
-
-        @media screen and (max-width: 970px) {
-            .results__card {
-                width: 30%
-            }
-            
         }
 
         .results__card:hover {
@@ -357,30 +323,6 @@
             font-size: 1.2rem;
         }
 
-        @media screen and (max-width: 625px) {
-
-            .nav {
-                flex-direction: column;
-            }
-
-            .results__card {
-                width: 45%
-            }
-
-            .list-img-container {
-                width: 60%;
-            }
-
-            
-        }
-
-        @media screen and (max-width: 400px) {
-            .results__card {
-                width: 90%;
-            }
-            
-        }
-
         .nav__item {
             padding: 1rem;
             margin: 0.5rem;
@@ -394,7 +336,12 @@
         }
 
         #search__select {
-            margin: 0 0.5rem;        
+            margin: 0 0.5rem;
+            border-right: 1px solid black;
+            border-left: none;
+            border-bottom: none;
+            border-top: none;
+               
         }
 
         .search {
@@ -409,7 +356,7 @@
             border: none;
             background-color: transparent;
             outline: none;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: text;
         }
 
@@ -420,6 +367,77 @@
             line-height: 1.6%;
 
             box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        }
+
+        @media screen and (max-width: 970px) {
+            .pop-movie__card {
+                flex-basis: 40%;
+            }
+
+            .detail__card {
+                flex-direction: column;
+            }
+
+            .detail__img-container {
+                width: 60%;
+            }
+
+            #web-author-name {
+                display: none;
+            }
+
+            .results__card {
+                width: 30%
+            }
+
+            .no-search-alert {                
+                font-size: 0.8rem;
+            }
+
+            .tag {
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                font-size: 0.5rem;
+            }
+
+            .sort__btn, .display-btn {
+                padding: 0.2rem;
+            }
+
+            .search__input {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media screen and (max-width: 625px) {
+
+            .nav {
+                flex-direction: column;
+                padding-bottom: 1rem;
+            }
+
+            .results__card {
+                width: 45%
+            }
+
+            .list-img-container {
+                width: 60%;
+            }
+
+            .tag {
+                font-size: 0.5rem;
+            }
+
+
+        }
+
+            @media screen and (max-width: 400px) {
+            .card {
+                flex-basis: 90%;
+            }
+
         }
         
 
@@ -486,6 +504,14 @@
 
             // EVENT HANDLERS
 
+            // Clear search results on select option change to prevent ID mismatch of persons to movies.
+            $('.search__select').change(function() {
+                clearSearchList();
+                $('.more').hide();
+                $('.detail').hide();
+                $('.results').append('<p class="no-search-alert">NO SEARCH PERFORMED</p>');
+            });
+
             // Book card click event handler. Must be delegated due to templating.
             $(document).on('click', '.card', function() {
                 tempDisable(this);
@@ -493,7 +519,7 @@
                 $('.detail__card').remove();
                 $('.detail').show();
                 $("html, body").scrollTop($('.detail').offset().top); // Send user to their selected book details page.
-                if ($('#search__select').val() === 'Movies') {
+                if ($('#search__select').val() === 'Movies' || $(this).hasClass('pop-movie__card')) {
                     $.ajax({
                         url: 'https://api.themoviedb.org/3/movie/' + this.id + '?api_key=0266a67ac14ac71f091e39db4e90b0e0&language=en-US',
                         type: "GET",
@@ -517,6 +543,7 @@
                         success: function (data) {
                             console.log(data);
                             data.img = "https://image.tmdb.org/t/p/w500" + data.profile_path;
+
                             if (data.biography === "") {
                                 data.biography = "No biography listed.";
                             }
@@ -588,7 +615,7 @@
             $('.search__btn').click(function() {
                 tempDisable(this);
                 $('.detail').hide();
-                clearBookList();
+                clearSearchList();
                 $('.more').show();
                 var searchInput = $('.search__input').val();
                 if (!searchInput) {
@@ -682,7 +709,7 @@
 
             // Helper functions
 
-            function clearBookList () {
+            function clearSearchList () {
                 $('.results').remove();
                 $('.results-container').append("<div class='results'></div>")
             }
