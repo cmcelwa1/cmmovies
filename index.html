@@ -450,7 +450,7 @@
         </article>
     </script>
 
-    <!-- Mustache.js Template - Detailed card -->
+    <!-- Mustache.js Template - Detailed movie card -->
     <script id="detail-movie-template" type="text/html">
         <article class="detail__card">
             <div class="detail__img-container">
@@ -460,6 +460,21 @@
                 <p>{{title}}</p>
                 <p><b>Genre:</b> {{genre1}}</p>
                 <p><b>Description:</b> {{overview}}</p>
+            </div>
+        </article>
+    </script>
+
+    <!-- Mustache.js Template - Detailed actor card -->
+    <script id="detail-actor-template" type="text/html">
+        <article class="detail__card">
+            <div class="detail__img-container">
+                <img class="detail__img" src="{{{img}}}" alt="{{{name}}} profile photo"/>
+            </div>
+            <div class="detail__text">
+                <p>{{name}}</p>
+                <p><b>Birthday:</b> {{birthday}}</p>
+                <p><b>Birthplace:</b> {{place_of_birth}}</p>
+                <p><b>Biography:</b> {{biography}}</p>
             </div>
         </article>
     </script>
@@ -501,6 +516,11 @@
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
+                            data.img = "https://image.tmdb.org/t/p/w500" + data.profile_path;
+                            if (data.biography === "") {
+                                data.biography = "No biography listed.";
+                            }
+                            $('.detail__container').append(Mustache.render($("#detail-actor-template").html(), data));
                         },
                         fail: function () {
                             console.log("Call to API failed.");
